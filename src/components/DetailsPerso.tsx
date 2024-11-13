@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Joueur } from '../modeles/Joueur'; // Importer le modèle Joueur
 import { useParams } from 'react-router-dom';
@@ -13,8 +13,8 @@ function DetailPerso() {
     axios
       .get<Joueur>(`https://olidevwebapi.netlify.app//api/joueur/${nomJoueur}`)
       .then((response) => {
-        console.log(response.data.joueur);
-        setJoueur(response.data.joueur); // Stocker les données du joueur
+        console.log(response.data);
+        setJoueur(response.data); // Stocker les données du joueur
       })
       .catch((err) => {
         console.error('Erreur lors de la récupération du joueur :', err);
