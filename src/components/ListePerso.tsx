@@ -9,7 +9,7 @@ function ListePerso() {
 
   useEffect(() => {
     axios
-      .get<Joueur[]>('https://cosmic-cajeta-99f702.netlify.app/api/joueur/all')
+      .get<Joueur[]>('https://olidevwebapi.netlify.app//api/joueur/all')
       .then((response) => {
         console.log(response.data.joueurs);
         setJoueurs(response.data.joueurs);
