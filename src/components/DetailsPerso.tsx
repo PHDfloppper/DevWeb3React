@@ -11,7 +11,7 @@ function DetailPerso() {
   // Utiliser useEffect pour récupérer les détails du joueur
   useEffect(() => {
     axios
-      .get<Joueur>(`https://olidevwebapi.netlify.app//api/joueur/${nomJoueur}`)
+      .get<Joueur>(`https://olidevwebreact.netlify.app/api/joueur/${nomJoueur}`)
       .then((response) => {
         console.log(response.data);
         setJoueur(response.data); // Stocker les données du joueur
@@ -42,29 +42,41 @@ function DetailPerso() {
       <h2>Inventaire</h2>
       <h3>Blocs</h3>
       <ul>
-        {joueur.inventaire.blocs.map((bloc) => (
-          <li key={bloc._id}>
-            {bloc.type} (Quantité: {bloc.quantité})
-          </li>
-        ))}
+        {joueur.inventaire?.blocs?.length > 0 ? (
+          joueur.inventaire.blocs.map((bloc, index) => (
+            <li key={index}>
+              {bloc.type} (Quantité: {bloc.quantité})
+            </li>
+          ))
+        ) : (
+          <li>Aucun bloc dans l'inventaire.</li>
+        )}
       </ul>
 
       <h3>Outils</h3>
       <ul>
-        {joueur.inventaire.outils.map((outil) => (
-          <li key={outil._id}>
-            {outil.type} (Matériau: {outil.matériau}, Durabilité: {outil.durabilité})
-          </li>
-        ))}
+        {joueur.inventaire?.outils?.length > 0 ? (
+          joueur.inventaire.outils.map((outil, index) => (
+            <li key={index}>
+              {outil.type} (Matériau: {outil.matériau}, Durabilité: {outil.durabilité})
+            </li>
+          ))
+        ) : (
+          <li>Aucun outil dans l'inventaire.</li>
+        )}
       </ul>
 
       <h2>Succès</h2>
       <ul>
-        {joueur.succès.map((succes, index) => (
-          <li key={index}>
-            <strong>{succes.nom}</strong>: {succes.description} (Obtenu le {succes.dateObtention})
-          </li>
-        ))}
+        {joueur.succès?.length > 0 ? (
+          joueur.succès.map((succes, index) => (
+            <li key={index}>
+              <strong>{succes.nom}</strong>: {succes.description} (Obtenu le {new Date(succes.dateObtention).toLocaleDateString()})
+            </li>
+          ))
+        ) : (
+          <li>Aucun succès.</li>
+        )}
       </ul>
     </div>
   );

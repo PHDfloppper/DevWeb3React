@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Joueur } from '../modeles/Joueur';
 import { Link } from 'react-router-dom'; // Importer Link pour la navigation
+import { ListeContainer,ListeNom,PersoNom, } from '../styles/listePerso.styles';
 
 function ListePerso() {
   const [joueurs, setJoueurs] = useState<Joueur[] | null>(null);
@@ -10,7 +11,9 @@ function ListePerso() {
   //j'ai pas assigné de variable au useEffect donc s'execute juste quand le composant est initialisé
   useEffect(() => {
     axios
-      .get<Joueur[]>('https://olidevwebapi.netlify.app//api/joueur/all')
+      //https://olidevwebreact.netlify.app
+      //http://localhost:3000
+      .get<Joueur[]>('https://olidevwebreact.netlify.app/api/joueur/all')
       .then((response) => {
         console.log(response.data);
         setJoueurs(response.data);
@@ -30,20 +33,20 @@ function ListePerso() {
   }
 
   return (
-    <div>
+    <ListeContainer>
       <h1>Liste des Joueurs</h1>
-      <ul>
+      <ListeNom>
         {joueurs.map((joueur, index) => (
-          <li key={index}>
+          <PersoNom key={index}>
             {joueur.nomJoueur}
             {/* Ajouter un bouton qui redirige vers la page de détails du joueur */}
             <Link to={`/joueur/${joueur.nomJoueur}`}>
               <button>Détails</button>
             </Link>
-          </li>
+          </PersoNom>
         ))}
-      </ul>
-    </div>
+      </ListeNom>
+    </ListeContainer>
   );
 }
 

@@ -1,6 +1,7 @@
 import './App.css'
 import ListePerso from './components/ListePerso'
 import DetailPerso from './components/DetailsPerso'
+import AjoutPerso from './components/AjoutPerso';
 import {
   BrowserRouter,
   Routes,
@@ -13,7 +14,7 @@ function Modele() {
   return (
     <div>
       <a href="/">Page principale | </a> 
-      <a href="/dadams">Ajouter Perso | </a> 
+      <a href="/ajoutP">Ajouter Perso | </a> 
       <a href="/listeP">Liste perso | </a>
       <br />
       <Outlet />
@@ -24,29 +25,13 @@ function PagePrincipale() {
   return <h1>Page principale</h1>;
 }
 
-function DouglasAdams() {
-  return (
-    <>
-      <h1>Page de Douglas Adams</h1> 
-      <a href="/livre/1">Livre 1</a> 
-      <a href="/livre/2">Livre 2</a> 
-    </>
-  );
-}
-
-function Livre() {
-  const { id } = useParams();
-  return <h1>Livre #{id}</h1>;
-}
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Modele />}>
           <Route index element={<PagePrincipale />} />
-          <Route path="dadams" element={<DouglasAdams />} />
-          <Route path="livre/:id" element={<Livre />} />
+          <Route path="ajoutP" element={<AjoutPerso />} />
           <Route path="listeP" element={<ListePerso/>}/>
           <Route path="/joueur/:nomJoueur" element={<DetailPerso />} />
         </Route>
