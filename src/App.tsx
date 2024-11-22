@@ -7,7 +7,6 @@ import {
   Routes,
   Route,
   Outlet,
-  useParams,
 } from 'react-router-dom';
 
 function Modele() {
