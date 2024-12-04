@@ -34,9 +34,9 @@ function ListePerso() {
 
   const fetchJoueurs = () => {
     axios
-    //https://olidevwebreact.netlify.app
+    //https://olidevwebapi.netlify.app
     //http://localhost:3000
-      .get<Joueur[]>('https://olidevwebreact.netlify.app/api/joueur/all')
+      .get<Joueur[]>('https://olidevwebapi.netlify.app/api/joueur/all')
       .then((response) => {
         console.log(response.data);
         setJoueurs(response.data);
@@ -51,7 +51,7 @@ function ListePerso() {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
 
     axios
-      .delete(`https://olidevwebreact.netlify.app/api/joueur/delete/${id}`)
+      .delete(`https://olidevwebapi.netlify.app/api/joueur/delete/${id}`)
       .then(() => {
         alert("Joueur supprimé avec succès.");
         fetchJoueurs(); // Recharger les données après suppression
