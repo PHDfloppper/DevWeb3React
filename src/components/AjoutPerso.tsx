@@ -33,7 +33,7 @@ function AjoutPerso() {
       };
 
     try {
-      const response = await axios.post('https://olidevwebreact.netlify.app/api/joueur/add', joueur);
+      const response = await axios.post('https://olidevwebapi.netlify.app//api/joueur/add', joueur);
       setMessage(`Joueur ajouté avec succès : ${response.data.nomJoueur}`);
       // Réinitialisation des champs
       setNomJoueur('');

@@ -11,7 +11,7 @@ function DetailPerso() {
   // Utiliser useEffect pour récupérer les détails du joueur
   useEffect(() => {
     axios
-      .get<Joueur>(`https://olidevwebreact.netlify.app/api/joueur/${nomJoueur}`)
+      .get<Joueur>(`https://olidevwebapi.netlify.app//api/joueur/${nomJoueur}`)
       .then((response) => {
         console.log(response.data);
         setJoueur(response.data); // Stocker les données du joueur

@@ -11,9 +11,9 @@ function ListePerso() {
   //j'ai pas assigné de variable au useEffect donc s'execute juste quand le composant est initialisé
   useEffect(() => {
     axios
-      //https://olidevwebreact.netlify.app
+      //https://olidevwebapi.netlify.app/
       //http://localhost:3000
-      .get<Joueur[]>('https://olidevwebreact.netlify.app/api/joueur/all')
+      .get<Joueur[]>('https://olidevwebapi.netlify.app//api/joueur/all')
       .then((response) => {
         console.log(response.data);
         setJoueurs(response.data);
