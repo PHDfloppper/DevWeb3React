@@ -32,6 +32,44 @@ function ListePerso() {
     return <p>Chargement des données...</p>;
   }
 
+  const fetchJoueurs = () => {
+    axios
+    //https://olidevwebreact.netlify.app
+    //http://localhost:3000
+      .get<Joueur[]>('https://olidevwebreact.netlify.app/api/joueur/all')
+      .then((response) => {
+        console.log(response.data);
+        setJoueurs(response.data);
+      })
+      .catch((err) => {
+        console.error('Erreur lors de la récupération des données :', err);
+        setError(`Impossible de récupérer les données : ${err.message}`);
+      });
+  };
+
+  const supprimerJoueur = (id: string) => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
+
+    axios
+      .delete(`https://olidevwebreact.netlify.app/api/joueur/delete/${id}`)
+      .then(() => {
+        alert("Joueur supprimé avec succès.");
+        fetchJoueurs(); // Recharger les données après suppression
+      })
+      .catch((err) => {
+        console.error("Erreur lors de la suppression :", err);
+        alert(`Impossible de supprimer le joueur : ${err.message}`);
+      });
+  };
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  if (joueurs === null) {
+    return <p>Chargement des données...</p>;
+  }
+
   return (
     <ListeContainer>
       <h1>Liste des Joueurs</h1>
@@ -43,6 +81,7 @@ function ListePerso() {
             <Link to={`/joueur/${joueur.nomJoueur}`}>
               <button>Détails</button>
             </Link>
+            <button onClick={() => supprimerJoueur(joueur._id)}>Supprimer</button>
           </PersoNom>
         ))}
       </ListeNom>
