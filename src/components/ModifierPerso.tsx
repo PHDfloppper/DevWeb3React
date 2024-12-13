@@ -75,8 +75,8 @@ function ModifierPerso() {
         };
     
         try {
-            const response = await axios.put(`https://olidevwebapi.netlify.app/api/joueur/update/${idJoueur}`, joueurModifie);
-            setMessage(`Joueur modifié avec succès : ${response.data.nomJoueur}`);
+            await axios.put(`https://olidevwebapi.netlify.app/api/joueur/update/${idJoueur}`, joueurModifie);
+            setMessage(`Joueur modifié avec succès : ${nomJoueur}`);
         } catch (error: any) {
             setMessage(`Erreur lors de la modification du joueur : ${error.response?.data?.message || error.message}`);
         }
