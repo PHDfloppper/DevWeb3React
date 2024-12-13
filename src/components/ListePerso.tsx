@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Joueur } from '../modeles/Joueur';
 import { Link } from 'react-router-dom'; // Importer Link pour la navigation
 import { ListeContainer,ListeNom,PersoNom, } from '../styles/listePerso.styles';
+import { FormattedMessage } from 'react-intl';
 
 function ListePerso() {
   const [joueurs, setJoueurs] = useState<Joueur[] | null>(null);
@@ -13,7 +14,7 @@ function ListePerso() {
     axios
       //https://olidevwebapi.netlify.app/
       //http://localhost:3000
-      .get<Joueur[]>('https://olidevwebapi.netlify.app//api/joueur/all')
+      .get<Joueur[]>('https://olidevwebapi.netlify.app/api/joueur/all')
       .then((response) => {
         console.log(response.data);
         setJoueurs(response.data);
@@ -72,16 +73,23 @@ function ListePerso() {
 
   return (
     <ListeContainer>
-      <h1>Liste des Joueurs</h1>
+      <h1><FormattedMessage id="listePerso.title" /></h1>
+      <Link to={`/nomJoueur`}>
+        <button><FormattedMessage id="listePerso.button.searchByName" /></button>
+      </Link>
+      <Link to={`/versionJoueur`}>
+        <button><FormattedMessage id="listePerso.button.searchByVersion" /></button>
+      </Link>
       <ListeNom>
         {joueurs.map((joueur, index) => (
           <PersoNom key={index}>
             {joueur.nomJoueur}
-            {/* Ajouter un bouton qui redirige vers la page de détails du joueur */}
-            <Link to={`/joueur/${joueur.nomJoueur}`}>
-              <button>Détails</button>
+            <Link to={`/joueur/${joueur._id}`}>
+              <button><FormattedMessage id="listePerso.button.details" /></button>
             </Link>
-            <button onClick={() => supprimerJoueur(joueur._id)}>Supprimer</button>
+            <button onClick={() => supprimerJoueur(joueur._id)}>
+              <FormattedMessage id="listePerso.button.delete" />
+            </button>
           </PersoNom>
         ))}
       </ListeNom>

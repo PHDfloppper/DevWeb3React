@@ -1,14 +1,14 @@
 export interface Bloc {
     _id: string;
     type: string;
-    quantité: number;
+    quantite: number;
 }
 
 export interface Outil {
     _id: string;
     type: string;
-    matériau: string;
-    durabilité: number;
+    materiau: string;
+    durabilite: number;
 }
 
 export interface Inventaire {

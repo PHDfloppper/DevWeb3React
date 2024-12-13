@@ -8,34 +8,43 @@ import {
   Route,
   Outlet,
 } from 'react-router-dom';
+import { ListeNom } from './styles/listePerso.styles';
+import ListePersoNom from './components/ListePersoNom';
+import ListePersoVersion from './components/ListePersoVersion';
+import { FormattedMessage, IntlProvider } from 'react-intl';
+import frMessages from './lang/fr.json';
 
 function Modele() {
   return (
     <div>
-      <a href="/">Page principale | </a> 
-      <a href="/ajoutP">Ajouter Perso | </a> 
-      <a href="/listeP">Liste perso | </a>
+      <a href="/"><FormattedMessage id="navigation.home" /> | </a> 
+      <a href="/ajoutP"><FormattedMessage id="navigation.addCharacter" /> | </a> 
+      <a href="/listeP"><FormattedMessage id="navigation.listCharacters" /> | </a>
       <br />
       <Outlet />
     </div>
   );
 }
 function PagePrincipale() {
-  return <h1>Page principale</h1>;
+  return <h1><FormattedMessage id="routes.mainPage" /></h1>;
 }
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Modele />}>
-          <Route index element={<PagePrincipale />} />
-          <Route path="ajoutP" element={<AjoutPerso />} />
-          <Route path="listeP" element={<ListePerso/>}/>
-          <Route path="/joueur/:nomJoueur" element={<DetailPerso />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <IntlProvider locale="fr" messages={frMessages}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Modele />}>
+            <Route index element={<PagePrincipale />} />
+            <Route path="ajoutP" element={<AjoutPerso />} />
+            <Route path="listeP" element={<ListePerso />} />
+            <Route path="/joueur/:idJoueur" element={<DetailPerso />} />
+            <Route path="/nomJoueur" element={<ListePersoNom />} />
+            <Route path="/versionJoueur" element={<ListePersoVersion />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </IntlProvider>
   );
 }
 
