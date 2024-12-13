@@ -88,7 +88,7 @@ function AjoutPerso() {
         </div>
 
         <div>
-          <label htmlFor="versionMinecraft">{formatMessage({ id: 'versionMinecraft' })} :</label>
+          <label htmlFor="versionMinecraft">{formatMessage({ id: 'versionMinecraft' })} (0.0.0):</label>
           <input
             type="text"
             id="versionMinecraft"

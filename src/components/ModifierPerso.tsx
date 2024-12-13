@@ -32,7 +32,7 @@ function ModifierPerso() {
                 setModeHardcore(joueurData.modeHardcore);
                 setBlocs(joueurData.inventaire.blocs || [{ type: '', quantite: 0 }]);
                 setOutils(joueurData.inventaire.outils || [{ type: '', materiau: '', durabilite: 0 }]);
-                setSucces(joueurData.succès || [{ nom: '', description: '', dateObtention: '' }]);
+                setSucces(joueurData.succes || [{ nom: '', description: '', dateObtention: '' }]);
             })
             .catch((err) => {
                 console.error('Erreur lors de la récupération du joueur :', err);

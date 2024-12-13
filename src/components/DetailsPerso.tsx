@@ -73,8 +73,8 @@ function DetailPerso() {
 
       <h2><FormattedMessage id="detailPerso.success" /></h2>
       <ul>
-        {joueur.succès?.length > 0 ? (
-          joueur.succès.map((succes, index) => (
+        {joueur.succes?.length > 0 ? (
+          joueur.succes.map((succes, index) => (
             <li key={index}>
               <strong>{succes.nom}</strong>: {succes.description} (<FormattedMessage id="detailPerso.obtainedOn" /> {new Date(succes.dateObtention).toLocaleDateString()})
             </li>

@@ -28,7 +28,7 @@ export interface Joueur {
     nomJoueur: string;
     versionMinecraft: string;
     inventaire: Inventaire;
-    succès: Succès[];
+    succes: Succès[];
     heuresJeu: number;
     modeHardcore: boolean;
 }
