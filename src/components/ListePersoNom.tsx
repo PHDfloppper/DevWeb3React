@@ -6,14 +6,15 @@ import { Link } from "react-router-dom";
 import { useIntl, FormattedMessage } from "react-intl"; // Import des outils react-intl
 
 function ListePersoNom() {
+  const { formatMessage } = useIntl();
   const [nomRecherche, setNomRecherche] = useState("");
   const [joueur, setJoueur] = useState<Joueur | null>(null);
   const [error, setError] = useState("");
-  const intl = useIntl(); // Hook pour localiser les messages
 
+  //fonction qui envoie le nom d'un joueur à l'api pour chercher un joueur
   const rechercherJoueur = () => {
     if (!nomRecherche.trim()) {
-      alert("Veuillez entrer un nom de joueur.");
+      setError(formatMessage({ id: 'pasNom' }));
       return;
     }
 
@@ -27,9 +28,10 @@ function ListePersoNom() {
         console.error("Erreur lors de la recherche :", err);
         setJoueur(null);
         setError(
-          `Impossible de trouver le joueur : ${
-            err.response?.data?.message || err.message
-          }`
+          formatMessage(
+            { id: 'detailPerso.error.notFound' },
+            { message: err.response?.data?.message || err.message }
+          )
         );
       });
   };
@@ -41,7 +43,7 @@ function ListePersoNom() {
       </h1>
       <input
         type="text"
-        placeholder={intl.formatMessage({ id: "listePersoNom.input.placeholder" })}
+        placeholder={formatMessage({ id: "listePersoNom.input.placeholder" })}
         value={nomRecherche}
         onChange={(e) => setNomRecherche(e.target.value)}
       />

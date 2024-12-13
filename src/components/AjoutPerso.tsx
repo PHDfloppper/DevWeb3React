@@ -3,47 +3,49 @@ import axios from 'axios';
 import {useIntl } from 'react-intl';
 
 function AjoutPerso() {
-  // États pour les champs du formulaire
   const [nomJoueur, setNomJoueur] = useState('');
   const [versionMinecraft, setVersionMinecraft] = useState('');
-  const [heuresJeu, setHeuresJeu] = useState<number | ''>('');
+  const [heuresJeu, setHeuresJeu] = useState<number | ''>(''); 
   const [modeHardcore, setModeHardcore] = useState(false);
   const [blocs, setBlocs] = useState([{ type: '', quantite: 0 }]);
   const [outils, setOutils] = useState([{ type: '', materiau: '', durabilite: 0 }]);
   const [succes, setSucces] = useState([{ nom: '', description: '', dateObtention: '' }]);
   const [message, setMessage] = useState<string | null>(null);
   const { formatMessage } = useIntl();
-
-  // Liste des types d'outils valides
   const typesOutils = ['Houe', 'Hache', 'Pioche', 'Trident', 'Arc', 'Épée', 'Pelle'];
 
-  // Gestionnaire de soumission du formulaire
+  //vérifie si le format de version est valide (0.0.0)
+  const isVersionValid = (version: string) => {
+    const regex = /^\d+\.\d+\.\d+$/;
+    return regex.test(version);
+  };
+
+  //gère l'envoie du formulaire d'ajout de joueur
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation simple des champs
     if (!nomJoueur || !versionMinecraft || heuresJeu === '') {
-      setMessage('Veuillez remplir tous les champs.');
+      setMessage(formatMessage({ id: 'ajoutPerso.error.requiredFields' }));
       return;
     }
 
-    // Construction des données à envoyer
+    if (!isVersionValid(versionMinecraft)) {
+      setMessage(formatMessage({ id: 'ajoutPerso.error.invalidVersion' }));
+      return;
+    }
+
     const joueur = {
       nomJoueur,
       versionMinecraft,
       heuresJeu,
       modeHardcore,
-      inventaire: {
-        blocs,
-        outils,
-      },
+      inventaire: { blocs, outils },
       succes,
     };
 
     try {
       await axios.post('https://olidevwebapi.netlify.app/api/joueur/add', joueur);
-      setMessage(`Joueur ajouté avec succès : ${nomJoueur}`);
-      // Réinitialisation des champs
+      setMessage(formatMessage({ id: 'ajoutPerso.success' }, { nomJoueur }));
       setNomJoueur('');
       setVersionMinecraft('');
       setHeuresJeu('');
@@ -52,21 +54,25 @@ function AjoutPerso() {
       setOutils([{ type: '', materiau: '', durabilite: 0 }]);
       setSucces([{ nom: '', description: '', dateObtention: '' }]);
     } catch (error: any) {
-      setMessage(`Erreur lors de l'ajout du joueur : ${error.response?.data?.message || error.message}`);
+      setMessage(formatMessage({ id: 'ajoutPerso.error.add' }, { error: error.response?.data?.message || error.message }));
     }
   };
 
-  // Fonction pour ajouter un bloc
+  //fonction pour ajouter un bloc au tableau de bloc
   const ajouterBloc = () => {
-    setBlocs([...blocs, { type: '', quantite: 0 }]);
+    setBlocs([...blocs, { type: '', quantite: 0 }]); //source consulté pour le spread: //source: https://www.w3schools.com/react/react_es6_spread.asp
   };
 
-  // Fonction pour ajouter un outil
+  //fonction pour ajouter un outil au tableau d'outil (max 4 outils)
   const ajouterOutil = () => {
+    if (outils.length >= 4) {
+      setMessage(formatMessage({ id: 'ajoutPerso.error.maxTools' }));
+      return;
+    }
     setOutils([...outils, { type: '', materiau: '', durabilite: 0 }]);
   };
 
-  // Fonction pour ajouter un succès
+  //fonction pour ajouter un succès au tableau de succès
   const ajouterSucces = () => {
     setSucces([...succes, { nom: '', description: '', dateObtention: '' }]);
   };
@@ -75,6 +81,8 @@ function AjoutPerso() {
     <div>
       <h1>{formatMessage({ id: 'ajouterJoueur' })}</h1>
       {message && <p>{message}</p>}
+      {"formul"}
+      {/* form complet d'ajout du joueur (y'a beaucoup de champs) */}
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="nomJoueur">{formatMessage({ id: 'nomJoueur' })} :</label>

@@ -19,7 +19,7 @@ function ModifierPerso() {
     const [outils, setOutils] = useState([{ type: '', materiau: '', durabilite: 0 }]);
     const [succes, setSucces] = useState([{ nom: '', description: '', dateObtention: '' }]);
 
-    // Fonction de récupération des détails du joueur
+    // fonction qui récupère les détails du joueur actuel pour les mettre en placeholder
     useEffect(() => {
         axios
             .get<Joueur>(`https://olidevwebapi.netlify.app/api/joueur/${idJoueur}`)
@@ -35,22 +35,37 @@ function ModifierPerso() {
                 setSucces(joueurData.succes || [{ nom: '', description: '', dateObtention: '' }]);
             })
             .catch((err) => {
-                console.error('Erreur lors de la récupération du joueur :', err);
-                setMessage(`Impossible de récupérer les données : ${err.message}`);
+                setMessage(
+                    intl.formatMessage(
+                        { id: 'modifierPerso.error.fetch' },
+                        { error: err.message }
+                    )
+                );
             });
-    }, [idJoueur]);
+    }, [idJoueur, intl]);
+
+    // vérifie que la version que le user entre est au format 0.0.0
+    const isVersionValid = (version: string) => {
+        const regex = /^\d+\.\d+\.\d+$/;
+        return regex.test(version);
+    };
 
     // Fonction de soumission du formulaire de modification
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         // Validation simple des champs
         if (!nomJoueur || !versionMinecraft || heuresJeu === '') {
-            setMessage('Veuillez remplir tous les champs.');
+            setMessage(intl.formatMessage({ id: 'modifierPerso.form.error.missingFields' }));
             return;
         }
-    
-        // Préparation des données dans le format attendu par l'API
+
+        if (!isVersionValid(versionMinecraft)) {
+            setMessage(intl.formatMessage({ id: 'modifierPerso.form.error.invalidVersion' }));
+            return;
+        }
+
+        // Préparation des données dans le format attendu par l'API pour que le site puisse put les données
         const joueurModifie = {
             nomJoueur,
             versionMinecraft,
@@ -73,12 +88,22 @@ function ModifierPerso() {
                 dateObtention: new Date(success.dateObtention).toISOString(),
             })),
         };
-    
+
         try {
             await axios.put(`https://olidevwebapi.netlify.app/api/joueur/update/${idJoueur}`, joueurModifie);
-            setMessage(`Joueur modifié avec succès : ${nomJoueur}`);
+            setMessage(
+                intl.formatMessage(
+                    { id: 'modifierPerso.success' },
+                    { nomJoueur }
+                )
+            );
         } catch (error: any) {
-            setMessage(`Erreur lors de la modification du joueur : ${error.response?.data?.message || error.message}`);
+            setMessage(
+                intl.formatMessage(
+                    { id: 'modifierPerso.error.update' },
+                    { error: error.response?.data?.message || error.message }
+                )
+            );
         }
     };
 
@@ -89,9 +114,12 @@ function ModifierPerso() {
 
     // Fonction pour ajouter un outil
     const ajouterOutil = () => {
+        if (outils.length >= 4) {
+            setMessage(intl.formatMessage({ id: 'modifierPerso.form.error.toolsLimit' }));
+            return;
+        }
         setOutils([...outils, { type: '', materiau: '', durabilite: 0 }]);
     };
-
     return (
         <div>
             <h1>
@@ -113,7 +141,7 @@ function ModifierPerso() {
                             required
                         />
                     </div>
-    
+
                     <div>
                         <label htmlFor="versionMinecraft">
                             <FormattedMessage id="modifierPerso.form.versionMinecraft.label" />
@@ -127,7 +155,7 @@ function ModifierPerso() {
                             required
                         />
                     </div>
-    
+
                     <div>
                         <label htmlFor="heuresJeu">
                             <FormattedMessage id="modifierPerso.form.heuresJeu.label" />
@@ -141,7 +169,7 @@ function ModifierPerso() {
                             required
                         />
                     </div>
-    
+
                     <div>
                         <label htmlFor="modeHardcore">
                             <FormattedMessage id="modifierPerso.form.modeHardcore.label" />
@@ -153,12 +181,12 @@ function ModifierPerso() {
                             onChange={(e) => setModeHardcore(e.target.checked)}
                         />
                     </div>
-    
+
                     <div>
                         <h3>
                             <FormattedMessage id="modifierPerso.form.inventaire.title" />
                         </h3>
-    
+
                         <div>
                             <h4>
                                 <FormattedMessage id="modifierPerso.form.blocs.title" />
@@ -199,7 +227,7 @@ function ModifierPerso() {
                                 <FormattedMessage id="modifierPerso.form.ajouterBloc" />
                             </button>
                         </div>
-    
+
                         <div>
                             <h4>
                                 <FormattedMessage id="modifierPerso.form.outils.title" />

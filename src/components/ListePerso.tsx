@@ -3,13 +3,15 @@ import axios from 'axios';
 import { Joueur } from '../modeles/Joueur';
 import { Link } from 'react-router-dom'; // Importer Link pour la navigation
 import { ListeContainer,ListeNom,PersoNom, } from '../styles/listePerso.styles';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 function ListePerso() {
+  const { formatMessage } = useIntl();
   const [joueurs, setJoueurs] = useState<Joueur[] | null>(null);
   const [error, setError] = useState("");
 
   //j'ai pas assigné de variable au useEffect donc s'execute juste quand le composant est initialisé
+  //récupère la liste de tout les joueurs
   useEffect(() => {
     axios
       //https://olidevwebapi.netlify.app/
@@ -21,7 +23,7 @@ function ListePerso() {
       })
       .catch((err) => {
         console.error('Erreur lors de la récupération des données :', err);
-        setError(`Impossible de récupérer les données : ${err.message}`);
+        setError(formatMessage({ id: 'modifierPerso.error.fetch' }, {err}));
       });
   }, []);
 
@@ -33,6 +35,7 @@ function ListePerso() {
     return <p>Chargement des données...</p>;
   }
 
+  //récupère tout les joueur, utilisé par la suppression pour reload les joueurs après une supression
   const fetchJoueurs = () => {
     axios
     //https://olidevwebapi.netlify.app
@@ -44,10 +47,11 @@ function ListePerso() {
       })
       .catch((err) => {
         console.error('Erreur lors de la récupération des données :', err);
-        setError(`Impossible de récupérer les données : ${err.message}`);
+        setError(formatMessage({ id: 'modifierPerso.error.fetch' }, {err}));
       });
   };
 
+  //fonction pour supprimer un joueur après avoir appuyé sur le bouton de suppression
   const supprimerJoueur = (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce joueur ?")) return;
 
@@ -55,11 +59,11 @@ function ListePerso() {
       .delete(`https://olidevwebapi.netlify.app/api/joueur/delete/${id}`)
       .then(() => {
         alert("Joueur supprimé avec succès.");
-        fetchJoueurs(); // Recharger les données après suppression
+        fetchJoueurs();
       })
       .catch((err) => {
         console.error("Erreur lors de la suppression :", err);
-        alert(`Impossible de supprimer le joueur : ${err.message}`);
+        setError(formatMessage({ id: 'supprimerPeso.error' }, {err}));
       });
   };
 

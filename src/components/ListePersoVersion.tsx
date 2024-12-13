@@ -2,19 +2,19 @@ import { useState } from "react";
 import axios from "axios";
 import { Joueur } from "../modeles/Joueur";
 import { ListeContainer, PersoNom } from "../styles/listePerso.styles";
-import { Link } from "react-router-dom"; // Ajout de l'import manquant
+import { Link } from "react-router-dom";
 import { useIntl, FormattedMessage } from "react-intl";
 
 function ListePersoVersion() {
-  const [versionRecherche, setVersionRecherche] = useState(""); // Stocke la version entrée par l'utilisateur
-  const [joueurs, setJoueurs] = useState<Joueur[] | null>(null); // Stocke les joueurs récupérés
-  const [error, setError] = useState(""); // Stocke les erreurs
-  const intl = useIntl();
+  const [versionRecherche, setVersionRecherche] = useState(""); // Stock la version entrée par l'utilisateur
+  const [joueurs, setJoueurs] = useState<Joueur[] | null>(null); // Stock les joueurs récupérés
+  const [error, setError] = useState(""); // Stock les erreurs
+  const {formatMessage} = useIntl();
 
   // Fonction pour rechercher des joueurs par version
   const rechercherParVersion = () => {
     if (!versionRecherche.trim()) {
-      alert("Veuillez entrer une version Minecraft.");
+      setError(formatMessage({ id: 'pasVersion' }));
       return;
     }
 
@@ -22,15 +22,16 @@ function ListePersoVersion() {
       .get<Joueur[]>(`https://olidevwebapi.netlify.app/api/joueur/version/${versionRecherche}`)
       .then((response) => {
         setJoueurs(response.data);
-        setError(""); // Efface les erreurs si la requête réussit
+        setError("");
       })
       .catch((err) => {
         console.error("Erreur lors de la recherche :", err);
-        setJoueurs(null); // Réinitialise les joueurs si aucun n'est trouvé
+        setJoueurs(null);
         setError(
-          `Impossible de trouver les joueurs pour la version "${versionRecherche}" : ${
-            err.response?.data?.message || err.message
-          }`
+          formatMessage(
+            { id: 'detailPerso.error.notFound.version' },
+            { message: err.response?.data?.message || err.message }
+          )
         );
       });
   };
@@ -38,13 +39,12 @@ function ListePersoVersion() {
   return (
     <ListeContainer>
       <h1>
-        <FormattedMessage id="listePerso.title" />
+        <FormattedMessage id="listePerso.title.version" />
       </h1>
 
-      {/* Champ de texte pour entrer la version */}
       <input
         type="text"
-        placeholder={intl.formatMessage({ id: "listePerso.input.placeholder" })}
+        placeholder={formatMessage({ id: "listePerso.input.placeholder" })}
         value={versionRecherche}
         onChange={(e) => setVersionRecherche(e.target.value)}
       />
@@ -52,10 +52,8 @@ function ListePersoVersion() {
         <FormattedMessage id="listePerso.button.search" />
       </button>
 
-      {/* Affichage des erreurs */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {/* Affichage des joueurs si trouvés */}
       {joueurs && joueurs.length > 0 ? (
         <div>
           {joueurs.map((joueur) => (

@@ -3,14 +3,15 @@ import axios from 'axios';
 import { Joueur } from '../modeles/Joueur'; // Importer le modèle Joueur
 import { useParams } from 'react-router-dom';
 import ModifierPerso from './ModifierPerso';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 function DetailPerso() {
+  const { formatMessage } = useIntl();
     const { idJoueur } = useParams<{ idJoueur: string }>();
   const [joueur, setJoueur] = useState<Joueur | null>(null);
   const [error, setError] = useState<string>('');
 
-  // Utiliser useEffect pour récupérer les détails du joueur
+  //useEffect pour récupérer les détails du joueur choisi par le user
   useEffect(() => {
     axios
       .get<Joueur>(`https://olidevwebapi.netlify.app/api/joueur/${idJoueur}`)
@@ -18,23 +19,21 @@ function DetailPerso() {
         console.log("Allooooo");
         console.log(response.data);
         console.log(idJoueur);
-        setJoueur(response.data); // Stocker les données du joueur
+        setJoueur(response.data);
       })
       .catch((err) => {
         console.error('Erreur lors de la récupération du joueur :', err);
-        setError(`Impossible de récupérer les données : ${err.message}`);
+        setError(formatMessage({ id: 'ajoutPerso.error.add' }, {err}));
         console.log(idJoueur);
       });
-  }, [idJoueur]); // L'effet dépend du joueurId
+  }, [idJoueur]);
 
-  // Afficher un message d'erreur si l'appel API échoue
   if (error) {
     return <p>{error}</p>;
   }
 
-  // Afficher un message de chargement pendant que les données sont récupérées
   if (!joueur) {
-    return <p>Chargement des données... ALLOOOOOO</p>;
+    return <p>{formatMessage({ id: 'modifierPerso.loading' })}</p>;
   }
 
   return (
