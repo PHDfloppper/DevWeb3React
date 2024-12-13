@@ -8,7 +8,6 @@ import {
   Route,
   Outlet,
 } from 'react-router-dom';
-import { ListeNom } from './styles/listePerso.styles';
 import ListePersoNom from './components/ListePersoNom';
 import ListePersoVersion from './components/ListePersoVersion';
 import { FormattedMessage, IntlProvider } from 'react-intl';
